@@ -1,3 +1,17 @@
+@if(updateAvailable()) {
+<div class="flex justify-center">
+  <mat-card appearance="outlined" class="w-[95vw] md:w-[60vw] mb-[32px]">
+    <mat-card-header>
+      <mat-card-title>Update available</mat-card-title>
+    </mat-card-header>
+    <mat-card-content> Please restart the application to apply the update. </mat-card-content>
+    <mat-card-actions align="end">
+      <button matButton="outlined" (click)="updateApplication()">Restart</button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+}
+
 <div class="flex justify-center">
   <mat-form-field class="w-[95vw] md:w-[60vw] sticky top-0 z-10">
     <mat-label>Enter VKM</mat-label>
