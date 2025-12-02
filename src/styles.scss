@@ -1,6 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 @use '@angular/material' as mat;
-@import 'tailwindcss';
+@use 'tailwindcss';
+@use 'roboto-fontface/css/roboto/roboto-fontface.css';
+@use 'material-icons';
 
 html,
 body {
@@ -9,16 +11,18 @@ body {
 
 html {
   color-scheme: light dark;
+
   @include mat.theme(
     (
       color: (
         primary: mat.$azure-palette,
         tertiary: mat.$blue-palette,
       ),
-      typography: Roboto,
+      typography: 'Roboto',
       density: 0,
     )
   );
+
   background-color: var(--mat-sys-surface);
   color: var(--mat-sys-on-surface);
   font: var(--mat-sys-body-medium);
@@ -27,5 +31,13 @@ html {
 
 body {
   margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+:root {
+  @include mat.toolbar-overrides(
+    (
+      container-background-color: var(--mat-sys-primary),
+      container-text-color: var(--mat-sys-on-primary),
+    )
+  );
 }

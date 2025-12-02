@@ -1,0 +1,10 @@
+<div class="flex justify-center">
+  <mat-form-field class="w-[95vw] md:w-[60vw] sticky top-0 z-10">
+    <mat-label>Enter VKM</mat-label>
+    <input matInput placeholder="Enter VKM..." [(ngModel)]="vkm" />
+    <mat-icon matPrefix>search</mat-icon>
+  </mat-form-field>
+</div>
+<div class="flex justify-center text-5xl">
+  {{ vkm() }}
+</div>
