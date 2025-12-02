@@ -1,0 +1,37 @@
+name: Build and Deploy App
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build-and-deploy-dev:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Angular App
+        run: npm run build
+
+      - name: Deploy via SCP
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          password: ${{ secrets.REMOTE_PW }}
+          port: 22
+          source: './dist/vkm-collect/browser/*'
+          target: ${{ secrets.REMOTE_PATH }}
+          strip_components: 1
+          rm: 1
