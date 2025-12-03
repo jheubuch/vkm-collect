@@ -41,3 +41,11 @@ body {
     )
   );
 }
+
+.on-primary {
+  @include mat.icon-overrides(
+    (
+      color: var(--mat-sys-on-primary),
+    )
+  );
+}

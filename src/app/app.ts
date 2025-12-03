@@ -1,18 +1,25 @@
-import { Component, effect, inject } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Meta } from '@angular/platform-browser';
 import PwaService from './core/pwa/pwa';
+import { CsvService } from './core/csv/csv';
 
 @Component({
   selector: 'app-root',
-  imports: [MatToolbarModule, RouterOutlet],
+  imports: [MatButtonModule, MatIconModule, MatMenuModule, MatToolbarModule, RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App {
   private readonly meta = inject(Meta);
   private readonly pwaService = inject(PwaService);
+  private readonly csvService = inject(CsvService);
+
+  public readonly csvAvailable = signal<boolean | null>(null);
 
   constructor() {
     effect(() => {
@@ -25,6 +32,17 @@ export class App {
         this.meta.addTag({ name: 'theme-color', content: primary });
       }
     });
+
+    this.checkCsvAvailability();
+  }
+
+  public async requestCsv(): Promise<void> {
+    await this.csvService.requestCsv();
+    await this.checkCsvAvailability();
+  }
+
+  private async checkCsvAvailability(): Promise<void> {
+    this.csvAvailable.set(await this.csvService.isCsvCached());
   }
 
   private getPrimaryColor(dark: boolean): string {

@@ -1,4 +1,23 @@
-<mat-toolbar class="sticky top-0 z-10"> VKM collect </mat-toolbar>
+<mat-toolbar class="sticky top-0 z-10">
+  <span>VKM collect</span>
+  <div class="flex-1"></div>
+  <button matIconButton [matMenuTriggerFor]="mainMenu">
+    <mat-icon class="on-primary">more_vert</mat-icon>
+  </button>
+  <mat-menu #mainMenu="matMenu">
+    <div mat-menu-item (click)="requestCsv()">
+      @if (csvAvailable() === true) {
+      <ng-container ngProjectAs="mat-icon">
+        <mat-icon class="on-primary">check</mat-icon> VKM available offline
+      </ng-container>
+      } @else if (csvAvailable() === false) {
+      <ng-container ngProjectAs="mat-icon">
+        <mat-icon class="on-primary">cancel</mat-icon> VKM not available offline
+      </ng-container>
+      }
+    </div>
+  </mat-menu>
+</mat-toolbar>
 <div class="pt-[16px] flex-1 overflow-y-auto h-[calc(100%-64px)]">
   <router-outlet></router-outlet>
 </div>
