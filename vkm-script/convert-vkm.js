@@ -1,29 +1,13 @@
-const fs = require("fs");
-const path = require("path");
-const XLSX = require("xlsx");
+const fs = require('fs');
+const path = require('path');
+const XLSX = require('xlsx');
 
 const inputPath = process.argv[2];
-const outputPath = process.argv[3] || "vkm-register.csv";
-const sheetName = "Alpha new";
-
-const CSV_SEPARATOR = ";";
-
-function csvEscape(value) {
-  if (value === null || value === undefined) return "";
-  const str = String(value);
-  if (
-    str.includes(CSV_SEPARATOR) ||
-    str.includes('"') ||
-    str.includes("\n") ||
-    str.includes("\r")
-  ) {
-    return '"' + str.replace(/"/g, '""') + '"';
-  }
-  return str;
-}
+const outputPath = process.argv[3] || 'vkm-register.json';
+const sheetName = 'Alpha new';
 
 function findColumnByHeader(sheet, headerRow, searchText) {
-  const range = XLSX.utils.decode_range(sheet["!ref"]);
+  const range = XLSX.utils.decode_range(sheet['!ref']);
   const needle = searchText.toLowerCase();
 
   for (let c = range.s.c; c <= range.e.c; c++) {
@@ -53,7 +37,7 @@ try {
     process.exit(1);
   }
 
-  const range = XLSX.utils.decode_range(sheet["!ref"]);
+  const range = XLSX.utils.decode_range(sheet['!ref']);
 
   // Suche Header Zeile
   let headerRow = null;
@@ -64,7 +48,7 @@ try {
       if (!cell || cell.v == null) continue;
 
       const value = String(cell.v).trim();
-      if (value === "VKM Latin (UNIQUE)") {
+      if (value === 'VKM Latin (UNIQUE)') {
         headerRow = r;
         break;
       }
@@ -75,17 +59,17 @@ try {
   if (headerRow === null) {
     console.error(
       'Header-Zeile mit "VKM Latin (UNIQUE)" wurde nicht gefunden. ' +
-      "Struktur der Excel-Datei prüfen."
+        'Struktur der Excel-Datei prüfen.'
     );
     process.exit(1);
   }
 
   // 2) Spaltenindizes ermitteln
-  const colVkmLatin = findColumnByHeader(sheet, headerRow, "vkm latin");
-  const colKeeper = findColumnByHeader(sheet, headerRow, "keeper name");
-  const colCountry = findColumnByHeader(sheet, headerRow, "country");
-  const colStatus = findColumnByHeader(sheet, headerRow, "status");
-  const colWebsite = findColumnByHeader(sheet, headerRow, "www");
+  const colVkmLatin = findColumnByHeader(sheet, headerRow, 'vkm latin');
+  const colKeeper = findColumnByHeader(sheet, headerRow, 'keeper name');
+  const colCountry = findColumnByHeader(sheet, headerRow, 'country');
+  const colStatus = findColumnByHeader(sheet, headerRow, 'status');
+  const colWebsite = findColumnByHeader(sheet, headerRow, 'www');
 
   if (
     colVkmLatin === null ||
@@ -95,13 +79,13 @@ try {
     colWebsite === null
   ) {
     console.error(
-      "Nicht alle benötigten Spalten konnten gefunden werden.\n" +
-      "Gefunden wurde:\n" +
-      `  VKM Latin: ${colVkmLatin}\n` +
-      `  Keeper:    ${colKeeper}\n` +
-      `  Country:   ${colCountry}\n` +
-      `  Status:    ${colStatus}\n` +
-      `  Website:   ${colWebsite}\n`
+      'Nicht alle benötigten Spalten konnten gefunden werden.\n' +
+        'Gefunden wurde:\n' +
+        `  VKM Latin: ${colVkmLatin}\n` +
+        `  Keeper:    ${colKeeper}\n` +
+        `  Country:   ${colCountry}\n` +
+        `  Status:    ${colStatus}\n` +
+        `  Website:   ${colWebsite}\n`
     );
     process.exit(1);
   }
@@ -112,7 +96,7 @@ try {
     const getCell = (col) => {
       const addr = XLSX.utils.encode_cell({ r, c: col });
       const cell = sheet[addr];
-      return cell && cell.v != null ? String(cell.v).trim() : "";
+      return cell && cell.v != null ? String(cell.v).trim() : '';
     };
 
     const vkmLatin = getCell(colVkmLatin);
@@ -126,37 +110,19 @@ try {
       continue;
     }
 
-    rows.push({ vkmLatin, keeper, country, status, website });
+    rows.push({
+      vkm: vkmLatin,
+      keeperName: keeper,
+      country: country,
+      status: status,
+      www: website,
+    });
   }
 
-  // 4) CSV erstellen
-  const lines = [];
-  lines.push(
-    [
-      csvEscape("VKM"),
-      csvEscape("Keeper Name"),
-      csvEscape("Country"),
-      csvEscape("Status"),
-      csvEscape("Website"),
-    ].join(CSV_SEPARATOR)
-  );
-  for (const row of rows) {
-    lines.push(
-      [
-        csvEscape(row.vkmLatin),
-        csvEscape(row.keeper),
-        csvEscape(row.country),
-        csvEscape(row.status),
-        csvEscape(row.website),
-      ].join(CSV_SEPARATOR)
-    );
-  }
+  fs.writeFileSync(outputPath, JSON.stringify(rows), 'utf8');
 
-  const csvContent = lines.join("\n");
-  fs.writeFileSync(outputPath, csvContent, "utf8");
-
-  console.log(`CSV-Datei erfolgreich erstellt: ${path.resolve(outputPath)}`);
+  console.log(`JSON-Datei erfolgreich erstellt: ${path.resolve(outputPath)}`);
 } catch (err) {
-  console.error("Fehler beim Konvertieren des VKM-Registers:", err.message);
+  console.error('Fehler beim Konvertieren des VKM-Registers:', err.message);
   process.exit(1);
 }
