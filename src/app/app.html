@@ -5,12 +5,12 @@
     <mat-icon class="on-primary">more_vert</mat-icon>
   </button>
   <mat-menu #mainMenu="matMenu">
-    <div mat-menu-item (click)="requestCsv()">
-      @if (csvAvailable() === true) {
+    <div mat-menu-item (click)="requestVkm()">
+      @if (vkmAvailable() === true) {
       <ng-container ngProjectAs="mat-icon">
         <mat-icon class="on-primary">check</mat-icon> VKM available offline
       </ng-container>
-      } @else if (csvAvailable() === false) {
+      } @else if (vkmAvailable() === false) {
       <ng-container ngProjectAs="mat-icon">
         <mat-icon class="on-primary">cancel</mat-icon> VKM not available offline
       </ng-container>

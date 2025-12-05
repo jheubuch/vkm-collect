@@ -25,11 +25,11 @@
       }
     },
     {
-      "name": "csv",
+      "name": "vkm-json",
       "installMode": "lazy",
       "updateMode": "lazy",
       "resources": {
-        "files": ["/vkm-register.csv"]
+        "files": ["/vkm-register.json"]
       }
     }
   ]

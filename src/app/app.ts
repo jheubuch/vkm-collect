@@ -6,7 +6,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Meta } from '@angular/platform-browser';
 import PwaService from './core/pwa/pwa';
-import { CsvService } from './core/csv/csv';
+import { VkmService } from './core/vkm/vkm';
 
 @Component({
   selector: 'app-root',
@@ -17,9 +17,9 @@ import { CsvService } from './core/csv/csv';
 export class App {
   private readonly meta = inject(Meta);
   private readonly pwaService = inject(PwaService);
-  private readonly csvService = inject(CsvService);
+  private readonly vkmService = inject(VkmService);
 
-  public readonly csvAvailable = signal<boolean | null>(null);
+  public readonly vkmAvailable = signal<boolean | null>(null);
 
   constructor() {
     effect(() => {
@@ -33,16 +33,16 @@ export class App {
       }
     });
 
-    this.checkCsvAvailability();
+    this.checkVkmAvailability();
   }
 
-  public async requestCsv(): Promise<void> {
-    await this.csvService.requestCsv();
-    await this.checkCsvAvailability();
+  public async requestVkm(): Promise<void> {
+    console.log(await this.vkmService.requestVkm(true));
+    await this.checkVkmAvailability();
   }
 
-  private async checkCsvAvailability(): Promise<void> {
-    this.csvAvailable.set(await this.csvService.isCsvCached());
+  private async checkVkmAvailability(): Promise<void> {
+    this.vkmAvailable.set(await this.vkmService.isVkmCached());
   }
 
   private getPrimaryColor(dark: boolean): string {

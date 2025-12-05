@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { Csv } from './csv';
+import { VkmService } from './vkm';
 
 describe('Csv', () => {
-  let service: Csv;
+  let service: VkmService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(Csv);
+    service = TestBed.inject(VkmService);
   });
 
   it('should be created', () => {
