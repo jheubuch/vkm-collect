@@ -7,13 +7,14 @@ import VkmEntry from '../../models/vkm-entry';
   providedIn: 'root',
 })
 export class VkmService {
-  public readonly vkmEntries = signal<Map<string, VkmEntry>>(new Map());
+  private readonly _vkmEntries = signal<Map<string, VkmEntry>>(new Map());
   private readonly httpClient = inject(HttpClient);
+
+  public readonly vkmEntries = this._vkmEntries.asReadonly();
 
   public async isVkmCached(): Promise<boolean> {
     try {
       const result = await window.caches.match('/vkm-register.json');
-      console.log('VKM result', result);
       return result !== undefined;
     } catch (error) {
       console.error(error);
@@ -29,7 +30,6 @@ export class VkmService {
     const entries = await firstValueFrom(
       this.httpClient.get<VkmEntry[]>('/vkm-register.json', { headers: headers })
     );
-    console.log('VKM fetched', entries);
-    this.vkmEntries.set(new Map(entries.map((entry) => [entry.vkm, entry])));
+    this._vkmEntries.set(new Map(entries.map((entry) => [entry.vkm, entry])));
   }
 }

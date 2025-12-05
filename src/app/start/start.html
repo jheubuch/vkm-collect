@@ -15,10 +15,19 @@
 <div class="flex justify-center">
   <mat-form-field class="w-[95vw] md:w-[60vw] sticky top-0 z-10">
     <mat-label>Enter VKM</mat-label>
-    <input matInput placeholder="Enter VKM..." [(ngModel)]="vkm" autofocus />
+    <input
+      matInput
+      placeholder="Enter VKM..."
+      [ngModel]="vkm()"
+      (ngModelChange)="vkm.set($event.toUpperCase())"
+      autofocus
+      [disabled]="vkmData().size <= 0"
+    />
     <mat-icon matPrefix>search</mat-icon>
   </mat-form-field>
 </div>
+@if (vkmResult(); as vkmResult) {
 <div class="flex justify-center text-5xl">
-  {{ vkm() }}
+  {{ vkmResult.keeperName }}
 </div>
+}

@@ -1,4 +1,4 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -20,6 +20,11 @@ export class App {
   private readonly vkmService = inject(VkmService);
 
   public readonly vkmAvailable = signal<boolean | null>(null);
+  public readonly vkmData = this.vkmService.vkmEntries;
+  public readonly vkmLoaded = computed(() => {
+    const vkmData = this.vkmData();
+    return vkmData.size > 0;
+  });
 
   constructor() {
     effect(() => {
@@ -33,11 +38,18 @@ export class App {
       }
     });
 
+    effect(() => {
+      const vkmAvailable = this.vkmAvailable();
+      if (vkmAvailable === true) {
+        this.requestVkm();
+      }
+    });
+
     this.checkVkmAvailability();
   }
 
-  public async requestVkm(): Promise<void> {
-    console.log(await this.vkmService.requestVkm(true));
+  public async requestVkm(force: boolean = false): Promise<void> {
+    console.log(await this.vkmService.requestVkm(force));
     await this.checkVkmAvailability();
   }
 
