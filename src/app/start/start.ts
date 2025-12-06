@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import PwaService from '../core/pwa/pwa';
 import { VkmService } from '../core/vkm/vkm';
+import { VkmCard } from '../components/vkm-card/vkm-card';
 
 @Component({
   selector: 'app-start',
@@ -18,6 +19,7 @@ import { VkmService } from '../core/vkm/vkm';
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
+    VkmCard,
   ],
   templateUrl: './start.html',
   styleUrl: './start.css',

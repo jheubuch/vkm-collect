@@ -1,0 +1,46 @@
+@if(vkm(); as vkm) {
+<mat-card appearance="outlined">
+  <mat-card-header>
+    <mat-card-title>
+      <span>{{ vkm.keeperName }}</span>
+    </mat-card-title>
+    <mat-card-subtitle>
+      <span class="italic">
+        @if (lastSeen(); as lastSeen) {
+        <span>seen on {{ lastSeen | date : 'longDate' }}</span>
+        } @else {
+        <span>Not seen yet</span>
+        }
+      </span>
+    </mat-card-subtitle>
+    @if(lastSeen()) {
+    <button matCardAvatar matIconButton (click)="markAsUnseen()">
+      <mat-icon>star</mat-icon>
+    </button>
+    } @else {
+    <button matCardAvatar matIconButton (click)="markAsSeen()">
+      <mat-icon>star_border</mat-icon>
+    </button>
+    }
+  </mat-card-header>
+  <mat-card-actions>
+    <div class="flex-1"></div>
+    <mat-chip>
+      @switch(vkm.status) { @case('in use') {
+      <mat-icon matChipAvatar>check</mat-icon>
+      } @case('Blocked') {
+      <mat-icon matChipAvatar>remove_circle_outline</mat-icon>
+      } @case('Revoked') {
+      <mat-icon matChipAvatar>call_missed</mat-icon>
+      } }
+      <span>{{ vkm.status }}</span>
+    </mat-chip>
+    @if(vkm.www) {
+    <a matButton class="ms-2" [href]="'https://' + vkm.www" target="_blank" rel="noopener">
+      <mat-icon>language</mat-icon>
+      Website
+    </a>
+    }
+  </mat-card-actions>
+</mat-card>
+}

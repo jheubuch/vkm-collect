@@ -27,7 +27,7 @@
   </mat-form-field>
 </div>
 @if (vkmResult(); as vkmResult) {
-<div class="flex justify-center text-5xl">
-  {{ vkmResult.keeperName }}
+<div class="flex justify-center">
+  <vkm-card class="w-[95vw] md:w-[60vw]" [vkm]="vkmResult"></vkm-card>
 </div>
 }
